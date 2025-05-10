@@ -1,6 +1,7 @@
-from app.api.v1.endpoints import health, hello, auth
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+
+from app.api.v1.endpoints import auth, health, hello
 
 app = FastAPI(title="AQsis Backend")
 
