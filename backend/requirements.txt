@@ -1,6 +1,14 @@
+sqlalchemy[asyncio]
 pydantic-settings
+python-multipart
+passlib[bcrypt]
+pydantic[email]
+python-jose
 pre-commit
 hypercorn
+pydantic
+alembic
 fastapi
+asyncpg
 black
 ruff
