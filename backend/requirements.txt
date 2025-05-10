@@ -1,0 +1,6 @@
+pydantic-settings
+pre-commit
+hypercorn
+fastapi
+black
+ruff

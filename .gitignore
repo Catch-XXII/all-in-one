@@ -1,0 +1,49 @@
+# PyCharm IDE
+.idea/
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.env
+.venv/
+backend/.python-version
+
+# Ignore frontend build artifacts
+/frontend/node_modules/
+/frontend/dist/
+
+# Ignore backend Python artifacts
+/backend/__pycache__/
+/backend/.venv/
+/backend/.env
+/backend/*.sqlite3
+/backend/alembic.ini
+
+# Node.js / Vue
+node_modules/
+frontend/app/.env
+frontend/app/.browserslistrc
+frontend/app/.eslintcache
+frontend/app/dist/
+frontend/app/.vitepress/
+frontend/app/pnpm-lock.yaml
+
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# C extensions
+*.so
+
+# macOS
+.DS_Store
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+
