@@ -1,3 +1,5 @@
+from typing import Annotated
+
 from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
 from jose import JWTError, jwt
@@ -7,7 +9,6 @@ from app.core.config import settings
 from app.crud.user_crud import get_user_by_email
 from app.db.database import get_db
 from app.db.models.user import User
-from typing import Annotated
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/v1/login")
 
