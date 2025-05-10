@@ -13,4 +13,4 @@ app.add_middleware(
 )
 
 app.include_router(health.router, prefix="/v1", tags=["Health"])
-app.include_router(hello.router, prefix="/v1", tags=["Hrello"])
+app.include_router(hello.router, prefix="/v1", tags=["Hello"])
