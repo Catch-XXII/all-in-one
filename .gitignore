@@ -8,6 +8,8 @@ __pycache__/
 .env
 .venv/
 backend/.python-version
+e2e/.python-version
+performance/.python-version
 
 backend/alembic
 
