@@ -1,0 +1,89 @@
+# ~/.zshrc
+
+# --- Color Definitions (Shorter Names) ---
+C_USER="%F{red}"
+C_BRANCH="%F{magenta}"
+C_DETACH="%F{red}"
+C_DIR="%F{green}"
+C_VENV="%F{cyan}"
+C_RESET="%f"
+# --- End Color Definitions ---
+
+# Enable colors and prompt substitution
+autoload -U colors && colors
+setopt PROMPT_SUBST
+
+# --- Pyenv settings ---
+export PYENV_VIRTUALENV_DISABLE_PROMPT=1
+export PYENV_VIRTUALENV_AUTO_ACTIVATE=true
+
+# --- Initialize pyenv ---
+if command -v pyenv >/dev/null; then
+  eval "$(pyenv init --path)"
+  eval "$(pyenv init -)"
+  if type pyenv | grep -q 'shell function'; then
+    if pyenv commands | grep -q 'virtualenv-init'; then
+      eval "$(pyenv virtualenv-init -)"
+    fi
+  fi
+fi
+
+# --- User Aliases ---
+alias ..='cd ..'
+alias ...='cd ../..'
+alias code='code --wait'
+
+# --- Zsh Completion System ---
+autoload -Uz compinit
+compinit
+
+# --- Custom Prompt Functions (Using Shorter Color Variables) ---
+
+get_git_specific_prompt_suffix() {
+    local git_cmd
+    git_cmd=$(command -v git)
+
+    if [[ -z "$git_cmd" ]]; then
+        printf ""
+        return
+    fi
+
+    local is_work_tree_str is_git_dir_str
+    is_work_tree_str=$("$git_cmd" rev-parse --is-inside-work-tree 2>/dev/null)
+    is_git_dir_str=$("$git_cmd" rev-parse --is-inside-git-dir 2>/dev/null)
+
+    if [[ "$is_work_tree_str" == "true" && "$is_git_dir_str" == "false" ]]; then
+        local branch_name
+        branch_name=$("$git_cmd" rev-parse --abbrev-ref HEAD 2>/dev/null)
+
+        if [[ -n "$branch_name" ]]; then
+            if [[ "$branch_name" == "HEAD" ]]; then # Detached HEAD
+                printf "%sdetached%s in " "$C_DETACH" "$C_RESET" # Using shorter name
+            else # On a branch
+                printf "[%s%s%s] branch in " "$C_BRANCH" "$branch_name" "$C_RESET" # Using shorter name
+            fi
+        else # In git repo, but no branch name
+            printf "git repo in "
+        fi
+    else
+        printf ""
+    fi
+}
+
+get_venv_name_only() {
+    if [[ -n "$VIRTUAL_ENV" ]]; then
+        local venv_basename
+        venv_basename=$(basename "$VIRTUAL_ENV")
+        printf "%s%s%s" "$C_VENV" "$venv_basename" "$C_RESET" # Using shorter name
+    fi
+}
+
+# --- Assembling the PROMPT ---
+PROMPT="${C_USER}%n${C_RESET} is @ " # Using shorter names
+PROMPT+='$(get_git_specific_prompt_suffix)'
+PROMPT+="${C_DIR}%c${C_RESET}" # Using shorter names
+
+# Conditionally add venv info
+PROMPT+='$(venv_text=$(get_venv_name_only); if [[ -n "$venv_text" ]]; then printf -- ": %s" "$venv_text"; fi)'
+
+PROMPT+=' %(#.#.$) ' # Prompt character and final space
