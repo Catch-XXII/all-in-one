@@ -1,90 +1,101 @@
 <template>
-  <v-container class="fill-height" max-width="900">
-    <div>
-      <v-img
-        class="mb-4"
-        height="150"
-        src="@/assets/logo.png"
-      />
+  <v-container class="mx-auto debug-border" style="max-width: 786px">
+    <v-row>
+      <v-col cols="12">
+        <div class="text-center mb-8">
+          <div class="text-body-2 font-weight-light mb-n1">Welcome to</div>
+          <h1 class="text-h2 font-weight-bold mb-8">QAsis</h1>
 
-      <div class="mb-8 text-center">
-        <div class="text-body-2 font-weight-light mb-n1">Welcome to</div>
-        <h1 class="text-h2 font-weight-bold">Vuetify</h1>
-      </div>
-
-      <v-row>
-        <v-col cols="12">
-          <v-card
-            class="py-4"
-            color="surface-variant"
-            image="https://cdn.vuetifyjs.com/docs/images/one/create/feature.png"
-            prepend-icon="mdi-rocket-launch-outline"
-            rounded="lg"
-            variant="tonal"
-          >
-            <template #image>
-              <v-img position="top right" />
-            </template>
-
-            <template #title>
-              <h2 class="text-h5 font-weight-bold">
-                Get started
-              </h2>
-            </template>
-
-            <template #subtitle>
-              <div class="text-subtitle-1">
-                Change this page by updating <v-kbd>{{ `<HelloWorld />` }}</v-kbd> in <v-kbd>components/HelloWorld.vue</v-kbd>.
-              </div>
-            </template>
-          </v-card>
-        </v-col>
-
-        <v-col v-for="link in links" :key="link.href" cols="6">
-          <v-card
-            append-icon="mdi-open-in-new"
-            class="py-4"
-            color="surface-variant"
-            :href="link.href"
-            :prepend-icon="link.icon"
-            rel="noopener noreferrer"
-            rounded="lg"
-            :subtitle="link.subtitle"
-            target="_blank"
-            :title="link.title"
-            variant="tonal"
-          />
-        </v-col>
-      </v-row>
-    </div>
+          <v-form ref="formRef" @submit.prevent>
+            <v-text-field
+              ref="inputRef"
+              v-model="URL"
+              :class="{ 'glowing-border': loading }"
+              clearable
+              density="compact"
+              hide-details="true"
+              prepend-inner-icon="mdi-magnify"
+              :rules="rules"
+              variant="outlined"
+              @click:prepend-inner="search"
+              @keyup.enter="search"
+            />
+          </v-form>
+        </div>
+      </v-col>
+    </v-row>
   </v-container>
 </template>
 
 <script setup>
-  const links = [
-    {
-      href: 'https://vuetifyjs.com/',
-      icon: 'mdi-text-box-outline',
-      subtitle: 'Learn about all things Vuetify in our documentation.',
-      title: 'Documentation',
-    },
-    {
-      href: 'https://vuetifyjs.com/introduction/why-vuetify/#feature-guides',
-      icon: 'mdi-star-circle-outline',
-      subtitle: 'Explore available framework Features.',
-      title: 'Features',
-    },
-    {
-      href: 'https://vuetifyjs.com/components/all',
-      icon: 'mdi-widgets-outline',
-      subtitle: 'Discover components in the API Explorer.',
-      title: 'Components',
-    },
-    {
-      href: 'https://discord.vuetifyjs.com',
-      icon: 'mdi-account-group-outline',
-      subtitle: 'Connect with Vuetify developers.',
-      title: 'Community',
+  import { ref } from 'vue'
+
+  const URL = ref('')
+  const formRef = ref(null)
+  const loading = ref(false)
+
+  const rules = [
+    value => (value ? value.length <= 100 : true) || 'Max 100 characters.',
+    value => {
+      if (!value) return true // boşsa geç, validasyon uygulama
+      const pattern = /^(?:https?:\/\/)?(?:[\w-]+\.)+[a-z]{2,6}$/i
+      return pattern.test(value.trim()) || 'Invalid domain or URL.'
     },
   ]
+
+  async function search () {
+    const { valid } = await formRef.value.validate()
+    if (!valid) return
+
+    loading.value = true
+    console.log('Searching for:', URL.value.trim())
+
+    setTimeout(() => {
+      loading.value = false
+      console.log('Simulated search complete.')
+    }, 5000)
+  }
+
+  function handleKeyDown (event) {
+    if (event.key === 'Escape') {
+      URL.value = ''
+    }
+  }
+
+  onMounted(() => {
+    window.addEventListener('keydown', handleKeyDown)
+  })
+
+  onBeforeUnmount(() => {
+    window.removeEventListener('keydown', handleKeyDown)
+  })
 </script>
+
+<style>
+
+.glowing-border {
+  padding: 1px 1px;
+  font-size: 2rem;
+  color: #5f6368;
+  border-radius: 5px;
+
+  border: 2px solid #4285f4;
+  animation: glow-border 2s infinite alternate;
+}
+
+@keyframes glow-border {
+  0% {
+    border-color: #4285f4;
+  }
+  25% {
+     border-color: #ea4335;
+  }
+  50% {
+  border-color: #4285f4;
+  }
+  100% {
+       border-color: #ea4335;
+  }
+}
+
+</style>

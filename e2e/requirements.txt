@@ -1,0 +1,6 @@
+pytest-asyncio
+python-dotenv
+pytest-order
+playwright
+pytest
+ruff

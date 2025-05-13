@@ -8,3 +8,12 @@
 // @use 'vuetify/settings' with (
 //   $color-pack: false
 // );
+
+// Global border style
+//* {
+//  border: 2px dashed coral !important;
+//}
+
+.debug-border {
+  border: 2px dashed coral;
+}
