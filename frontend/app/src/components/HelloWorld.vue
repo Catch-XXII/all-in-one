@@ -1,5 +1,5 @@
 <template>
-  <v-container class="mx-auto debug-border" style="max-width: 786px">
+  <v-container class="mx-auto debug-border my-5" style="max-width: 786px">
     <v-row>
       <v-col cols="12">
         <div class="text-center mb-8">

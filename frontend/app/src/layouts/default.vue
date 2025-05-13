@@ -3,9 +3,7 @@
 
     <router-view />
 
-    <v-container class="mx-auto debug-border" style="max-width: 786px">
-      <h1>Main Content</h1>
-    </v-container>
+    <MainResultPage />
   </v-main>
 
   <AppFooter />
@@ -13,4 +11,5 @@
 
 <script setup>
   import AppFooter from '@/components/AppFooter.vue';
+  import MainResultPage from '@/pages/MainResultPage.vue';
 </script>

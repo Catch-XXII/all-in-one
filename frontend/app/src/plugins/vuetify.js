@@ -16,4 +16,11 @@ export default createVuetify({
   theme: {
     defaultTheme: 'light',
   },
+  defaults: {
+    VBtn: {
+      color: 'primary',
+      variant: 'outlined',
+      rounded: false,
+    },
+  },
 })
