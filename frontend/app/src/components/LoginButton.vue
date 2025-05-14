@@ -6,8 +6,6 @@
 <template>
   <v-btn
     class="text-none mx-2"
-    :disabled="loading"
-    :loading="loading"
     variant="outlined"
     @click="ui.toggleLoginDialog"
   >

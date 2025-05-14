@@ -1,10 +1,12 @@
 <script setup lang="ts">
   import { ref } from 'vue';
   const rail = ref(true)
-  import { useUIStore } from '@/stores/ui'
+
   import LoginButton from '@/components/LoginButton.vue';
   import RegisterButton from '@/components/RegisterButton.vue';
   import LoginForm from '@/components/LoginForm.vue';
+  import RegisterForm from '@/components/RegisterForm.vue';
+  import { useUIStore } from '@/stores/ui'
   const ui = useUIStore()
 </script>
 
@@ -22,6 +24,10 @@
       <v-btn icon="mdi-heart" />
       <v-dialog v-model="ui.loginDialog" max-width="500">
         <LoginForm />
+      </v-dialog>
+
+      <v-dialog v-model="ui.registerDialog" max-width="500">
+        <RegisterForm />
       </v-dialog>
 
     </template>

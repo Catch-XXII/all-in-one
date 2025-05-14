@@ -1,21 +1,13 @@
 <script setup lang="ts">
-
-  import { ref } from 'vue';
-
-  const loading = ref(false)
-  watch(loading, val => {
-    if (!val) return
-    setTimeout(() => (loading.value = false), 2000)
-  })
+  import { useUIStore } from '@/stores/ui'
+  const ui = useUIStore()
 </script>
 
 <template>
   <v-btn
     class="text-none"
-    :disabled="loading"
-    :loading="loading"
     variant="outlined"
-    @click="loading = !loading"
+    @click="ui.toggleRegisterDialog"
   >
     Register
   </v-btn>
