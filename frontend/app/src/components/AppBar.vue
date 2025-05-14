@@ -4,6 +4,7 @@
   import { useUIStore } from '@/stores/ui'
   import LoginButton from '@/components/LoginButton.vue';
   import RegisterButton from '@/components/RegisterButton.vue';
+  import LoginForm from '@/components/LoginForm.vue';
   const ui = useUIStore()
 </script>
 
@@ -19,10 +20,10 @@
       <LoginButton />
       <RegisterButton />
       <v-btn icon="mdi-heart" />
+      <v-dialog v-model="ui.loginDialog" max-width="500">
+        <LoginForm />
+      </v-dialog>
 
-      <v-btn icon="mdi-magnify" />
-
-      <v-btn icon="mdi-dots-vertical" />
     </template>
   </v-app-bar>
 </template>

@@ -1,6 +1,6 @@
 <template>
-  <v-container class="mx-auto debug-border my-5" style="max-width: 786px">
-    <v-row>
+  <v-container class="mx-auto my-5" style="max-width: 786px">
+    <v-row align="center" justify="center">
       <v-col cols="12">
         <div class="text-center mb-8">
           <div class="text-body-2 font-weight-light mb-n1">Welcome to</div>
@@ -10,11 +10,12 @@
             <v-text-field
               ref="inputRef"
               v-model="URL"
-              :class="{ 'glowing-border': loading }"
               clearable
               density="compact"
               hide-details="true"
+              label="Search"
               prepend-inner-icon="mdi-magnify"
+              rounded
               :rules="rules"
               variant="outlined"
               @click:prepend-inner="search"
@@ -72,30 +73,5 @@
 </script>
 
 <style>
-
-.glowing-border {
-  padding: 1px 1px;
-  font-size: 2rem;
-  color: #5f6368;
-  border-radius: 5px;
-
-  border: 2px solid #4285f4;
-  animation: glow-border 2s infinite alternate;
-}
-
-@keyframes glow-border {
-  0% {
-    border-color: #4285f4;
-  }
-  25% {
-     border-color: #ea4335;
-  }
-  50% {
-  border-color: #4285f4;
-  }
-  100% {
-       border-color: #ea4335;
-  }
-}
 
 </style>

@@ -14,17 +14,22 @@
     <v-divider />
 
     <v-list nav>
+      <v-list-subheader>History </v-list-subheader>
+
       <v-list-item
+        color="primary"
         prepend-icon="mdi-home-city"
         title="example.com"
         value="home"
       />
       <v-list-item
+        color="primary"
         prepend-icon="mdi-domain"
         title="yourdomain.com"
         value="your domain"
       />
       <v-list-item
+        color="primary"
         prepend-icon="mdi-account-group-outline"
         title="mybusiness.com"
         value="users"
