@@ -1,6 +1,7 @@
 from typing import Any, AsyncGenerator
-import pytest_asyncio
 from pages import LoginPage
+import pytest_asyncio
+import os
 from playwright.async_api import (
     Browser,
     BrowserContext,
@@ -10,9 +11,14 @@ from playwright.async_api import (
 )
 
 
+def pytest_configure(config):
+    if os.environ.get("CI"):
+        config.option.reruns = 3
+
+
 # Global playwright fixture
 @pytest_asyncio.fixture(scope="function")
-async def playwright_instance() -> AsyncGenerator[Playwright, Any]:
+async def playwright_instance():
     async with async_playwright() as p:
         yield p
 
@@ -20,6 +26,8 @@ async def playwright_instance() -> AsyncGenerator[Playwright, Any]:
 # Browser fixture
 @pytest_asyncio.fixture(scope="function")
 async def browser(playwright_instance: Playwright) -> AsyncGenerator[Browser, Any]:
+    print()
+    print("=" * 100)
     print("Launching browser...")
     browser = await playwright_instance.chromium.launch(headless=False, slow_mo=500)
     print("Browser launched.")
@@ -46,8 +54,7 @@ async def page(context: BrowserContext) -> AsyncGenerator[Page, Any]:
     yield page
 
 
-# User fixture (login + logout)
-@pytest_asyncio.fixture(scope="function")
+@pytest_asyncio.fixture
 async def user(page: Page) -> AsyncGenerator[Page, Any]:
     print("Creating Login page...")
     login_page = LoginPage(page)
@@ -55,10 +62,11 @@ async def user(page: Page) -> AsyncGenerator[Page, Any]:
     print("User logged in...")
     yield page
     await login_page.do_logout()
+    print("")
     print("User logged out...")
+    print("=" * 100)
 
 
-# Show collected test cases before execution
 def pytest_collection_finish(session):
     print("\n[Collected Test Cases]")
     for item in session.items:

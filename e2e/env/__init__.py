@@ -1,3 +1,3 @@
-from .config import Config
+from .env import Config
 
 __all__ = ["Config"]

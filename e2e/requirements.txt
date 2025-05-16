@@ -1,6 +1,8 @@
+pytest-rerunfailures
 pytest-asyncio
 python-dotenv
 pytest-order
+pytest-xdist
 playwright
 pytest
 ruff
