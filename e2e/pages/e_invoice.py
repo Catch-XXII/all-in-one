@@ -1,6 +1,6 @@
 from playwright.async_api import Page, expect
 from pages import Document
-from config import Config
+from env import Config
 
 
 class EInvoice(Document):

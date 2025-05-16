@@ -1,5 +1,5 @@
 from playwright.async_api import Page
-from config import Config
+from env import Config
 
 
 class Base:
