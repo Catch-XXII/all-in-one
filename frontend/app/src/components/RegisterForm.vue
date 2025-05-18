@@ -98,9 +98,10 @@
   const formRef = ref(null)
   const email = ref('')
 
-  const submit = () => {
-    if (formRef.value?.validate()) {
-    // Send registration request
+  const submit = async () => {
+    const isValid = await formRef.value?.validate()
+    if (isValid) {
+    // Continue
     }
   }
   const passwordRules = [

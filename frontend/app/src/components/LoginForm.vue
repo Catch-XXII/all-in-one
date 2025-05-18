@@ -103,9 +103,10 @@
     v => v.length >= 6 || 'Password must be at least 6 characters',
   ]
 
-  const submit = () => {
-    if (formRef.value?.validate()) {
-      // Proceed with login request
+  const submit = async () => {
+    const isValid = await formRef.value?.validate()
+    if (isValid) {
+    // Continue
     }
   }
 </script>
