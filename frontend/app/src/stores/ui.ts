@@ -21,6 +21,10 @@ export const useUIStore = defineStore('ui', () => {
     registerDialog.value = true
   }
 
+  const switchToLogin = () => {
+    loginDialog.value = true
+    registerDialog.value = false
+  }
 
   return {
     drawer,
@@ -30,5 +34,6 @@ export const useUIStore = defineStore('ui', () => {
     toggleLoginDialog,
     toggleRegisterDialog,
     switchToRegister,
+    switchToLogin,
   }
 })
