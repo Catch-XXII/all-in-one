@@ -51,7 +51,7 @@
           variant="tonal"
         >
           <v-card-text class="text-medium-emphasis text-caption">
-            Warning: After 3 consecutive failed login attempts, your account will be temporarily locked for three hours. If you must login now, you can also click "Forgot login password?" below to reset the login password.
+            Warning: After 3 consecutive failed login attempts, your account will be temporarily locked for three hours. If you must login now, you can also click "Forgot login password?" above to reset the login password.
           </v-card-text>
         </v-card>
 
