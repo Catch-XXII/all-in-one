@@ -106,7 +106,6 @@
   const submit = () => {
     if (formRef.value?.validate()) {
       // Proceed with login request
-      console.log('Logging in with', email.value, password.value)
     }
   }
 </script>

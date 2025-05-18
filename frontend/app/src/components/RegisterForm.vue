@@ -11,9 +11,11 @@
         <div class="text-subtitle-1 text-medium-emphasis">Email</div>
 
         <v-text-field
+          v-model="email"
           density="compact"
           placeholder="Email address"
           prepend-inner-icon="mdi-email-outline"
+          :rules="emailRules"
           variant="outlined"
         />
 
@@ -94,6 +96,7 @@
   const showPassword = ref(false)
   const showConfirmPassword = ref(false)
   const formRef = ref(null)
+  const email = ref('')
 
   const submit = () => {
     if (formRef.value?.validate()) {
@@ -105,6 +108,10 @@
     v => v.length >= 6 || 'Password must be at least 6 characters',
   ]
 
+  const emailRules = [
+    v => !!v || 'Email is required',
+    v => /.+@.+\..+/.test(v) || 'Email must be valid',
+  ]
   const confirmPasswordRules = [
     v => !!v || 'Please confirm your password',
     v => v === password.value || 'Passwords must match',
