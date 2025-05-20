@@ -7,7 +7,7 @@
     <v-list>
       <v-list-item
         prepend-avatar="https://randomuser.me/api/portraits/men/85.jpg"
-        title="John Leider"
+        :title="auth.user?.email"
       />
     </v-list>
 
@@ -35,6 +35,13 @@
         value="users"
       />
     </v-list>
+    <template #append>
+      <div class="pa-2">
+        <v-btn block rounded @click="handleLogout">
+          Logout
+        </v-btn>
+      </div>
+    </template>
   </v-navigation-drawer>
 
 </template>
@@ -42,7 +49,17 @@
 <script setup>
   import { useUIStore } from '@/stores/ui'
   import { useDisplay } from 'vuetify'
+  import { useAuthStore } from '@/stores/auth'
+  import { useRouter } from 'vue-router'
 
   const ui = useUIStore()
   const { mobile } = useDisplay()
+  const auth = useAuthStore()
+
+  const router = useRouter()
+
+  const handleLogout = () => {
+    auth.logout()
+    router.push('/')
+  }
 </script>

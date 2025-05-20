@@ -1,8 +1,6 @@
 <template>
   <v-main>
-
     <router-view />
-
     <MainResultPage />
   </v-main>
 

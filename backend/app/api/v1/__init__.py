@@ -1,3 +1,3 @@
-from .endpoints import health, hello
+from .endpoints import auth
 
-__all__ = ["health", "hello"]
+__all__ = ["auth"]

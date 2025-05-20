@@ -8,19 +8,23 @@
   import RegisterForm from '@/components/RegisterForm.vue';
   import { useUIStore } from '@/stores/ui'
   const ui = useUIStore()
+
+  import { useAuthStore } from '@/stores/auth'
+  const auth = useAuthStore()
 </script>
 
 <template>
   <v-app-bar class="" :elevation="1" :rail="rail" rounded>
     <template #prepend>
-      <v-app-bar-nav-icon @click="ui.toggleDrawer()" />
+      <v-app-bar-nav-icon v-if="auth.isLoggedIn" @click="ui.toggleDrawer()" />
     </template>
 
     <v-app-bar-title>QAsis</v-app-bar-title>
 
     <template #append>
-      <LoginButton />
-      <RegisterButton />
+      <LoginButton v-if="!auth.isLoggedIn" />
+      <RegisterButton v-if="!auth.isLoggedIn" />
+
       <v-btn icon="mdi-heart" />
       <v-dialog v-model="ui.loginDialog" max-width="500">
         <LoginForm />

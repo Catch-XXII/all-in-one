@@ -12,7 +12,6 @@
         <v-text-field
           v-model="email"
           density="compact"
-          label="Email"
           placeholder="Email address"
           prepend-inner-icon="mdi-email-outline"
           :rules="emailRules"
@@ -36,7 +35,6 @@
           v-model="password"
           :append-inner-icon="visible ? 'mdi-eye-off' : 'mdi-eye'"
           density="compact"
-          label="Password"
           placeholder="Enter your password"
           prepend-inner-icon="mdi-lock-outline"
           :rules="passwordRules"
@@ -59,6 +57,8 @@
           block
           class="mb-8"
           color="blue"
+          :disabled="loading"
+          :loading="loading"
           size="large"
           type="submit"
           variant="tonal"
@@ -78,6 +78,25 @@
           </a>
         </v-card-text>
       </v-card>
+
+      <v-snackbar
+        v-model="snackbarVisible"
+      >
+        {{ snackbarMessage }}
+
+        <template #actions>
+          <v-btn
+            color="pink"
+            :timeout="timeout"
+            variant="text"
+            @click="snackbarVisible = false"
+          >
+            Close
+          </v-btn>
+        </template>
+      </v-snackbar>
+
+
     </div>
   </v-form>
 </template>
@@ -85,10 +104,15 @@
 <script setup>
   import { ref } from 'vue'
   import { useUIStore } from '@/stores/ui'
-
+  import { loginUser } from '@/api/userLogin'
+  import { useRouter } from 'vue-router'
+  const loading = ref(false)
+  const router = useRouter()
   const ui = useUIStore()
   const formRef = ref(null)
-
+  const timeout = ref(2000)
+  const snackbarVisible = ref(false)
+  const snackbarMessage = ref('')
   const email = ref('')
   const password = ref('')
   const visible = ref(false)
@@ -104,9 +128,22 @@
   ]
 
   const submit = async () => {
-    const isValid = await formRef.value?.validate()
-    if (isValid) {
-    // Continue
+
+    const validationIs = await formRef.value?.validate()
+
+    if (validationIs.valid) {
+      loading.value = true
+      const success = await loginUser(email.value, password.value)
+      loading.value = false
+
+      if (success) {
+        ui.toggleLoginDialog()
+        await router.push('/')
+
+      } else {
+        snackbarMessage.value = 'Invalid email or password'
+        snackbarVisible.value = true
+      }
     }
   }
 </script>
