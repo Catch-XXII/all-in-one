@@ -133,15 +133,16 @@
 
     if (validationIs.valid) {
       loading.value = true
-      const success = await loginUser(email.value, password.value)
+      const { success, message } = await loginUser(email.value, password.value)
+
       loading.value = false
 
       if (success) {
-        ui.toggleLoginDialog()
+        ui.closeLoginDialog()
         await router.push('/')
 
-      } else {
-        snackbarMessage.value = 'Invalid email or password'
+      } else if (message){
+        snackbarMessage.value = message
         snackbarVisible.value = true
       }
     }

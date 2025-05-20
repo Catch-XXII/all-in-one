@@ -9,7 +9,7 @@ export async function loginUser (email, password) {
     params.append('username', email)
     params.append('password', password)
 
-    const response = await axios.post('/v1/login', params, {
+    const response = await axios.post('/login', params, {
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
       },
@@ -17,15 +17,36 @@ export async function loginUser (email, password) {
 
     const { access_token } = response.data
 
+    if (!access_token) {
+      return {
+        success: false,
+        message: 'Unexpected response. No token received.',
+      }
+    }
+
+
     authStore.login({
       user: { email },
       token: access_token,
     })
 
 
-    return true
+    return {
+      success: true,
+    }
   } catch (error) {
-    console.error('Login failed:', error)
-    return false
+    let message = 'An unknown error occurred'
+
+    if (!error.response) {
+      message = 'No service available. Please try again later.'
+    } else if (error.response.status === 401) {
+      message = 'Invalid email or password'
+    } else if (error.code === 'ECONNABORTED') {
+      message = 'Request timed out'
+    } else if (error.response.status >= 500) {
+      message = 'Server error. Please contact support.'
+    }
+
+    return { success: false, message }
   }
 }
