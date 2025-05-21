@@ -1,6 +1,7 @@
 [tool.ruff]
 builtins = ["_"]
 
+
 [tool.ruff.lint]
 select = [
     # pycodestyle
@@ -16,3 +17,4 @@ select = [
     # isort
     "I",
 ]
+ignore = ["B008"]
