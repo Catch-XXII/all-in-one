@@ -10,7 +10,7 @@ from app.db.schemas.user_schema import UserCreate, UserOut
 router = APIRouter()
 
 
-@router.post("/register", response_model=UserOut)
+@router.post("/register", response_model=UserOut, summary="Register new user")
 async def register(user_in: UserCreate, db: Annotated[AsyncSession, Depends(get_db)]):
     existing = await get_user_by_email(db, user_in.email)
     if existing:

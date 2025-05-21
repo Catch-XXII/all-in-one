@@ -9,14 +9,19 @@ from app.db.models import User
 
 router = APIRouter()
 
+
 class UserDeleteRequest(BaseModel):
     email: EmailStr
 
-@router.post("/admin/deactivate-user", tags=["Admin Only"])
+
+@router.post(
+    "/admin/deactivate-user",
+    summary="Deactivate a user by email (admin only)",
+)
 async def deactivate_user(
     data: UserDeleteRequest,
     db: AsyncSession = Depends(get_db),
-    current_user: User = Depends(get_current_user)
+    current_user: User = Depends(get_current_user),
 ):
     if not current_user.is_superuser:
         raise HTTPException(status_code=403, detail="Forbidden You are not superuser")

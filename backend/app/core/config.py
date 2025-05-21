@@ -1,4 +1,3 @@
-# app/core/config.py
 from pydantic import computed_field
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
@@ -14,6 +13,9 @@ class Settings(BaseSettings):
     FRONTEND_ORIGIN: str
     JWT_SECRET_KEY: str
     JWT_ALGORITHM: str
+    TITLE: str
+    DESCRIPTION: str
+    VERSION: str
 
     @computed_field
     @property

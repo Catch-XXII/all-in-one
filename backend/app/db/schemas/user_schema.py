@@ -12,6 +12,7 @@ class UserCreate(UserBase):
 class UserOut(UserBase):
     id: int
     is_active: bool
+    is_active: bool
 
     class Config:
         from_attributes = True

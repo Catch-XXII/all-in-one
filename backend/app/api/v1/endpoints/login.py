@@ -14,8 +14,9 @@ from app.db.schemas.token_schema import Token
 router = APIRouter()
 
 
-
-@router.post("/login", response_model=Token)
+@router.post(
+    "/login", response_model=Token, summary="Authenticate user and return JWT token"
+)
 async def login(
     form_data: Annotated[OAuth2PasswordRequestForm, Depends()],
     db: Annotated[AsyncSession, Depends(get_db)],
@@ -28,4 +29,3 @@ async def login(
 
     token = create_access_token({"sub": user.email})
     return {"access_token": token, "token_type": "bearer"}
-
