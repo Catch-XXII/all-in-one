@@ -1,6 +1,7 @@
 from typing import Annotated
 
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends
+from fastapi.responses import JSONResponse
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.crud.user_crud import create_user, get_user_by_email
@@ -14,8 +15,7 @@ router = APIRouter()
 async def register(user_in: UserCreate, db: Annotated[AsyncSession, Depends(get_db)]):
     existing = await get_user_by_email(db, user_in.email)
     if existing:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST, detail="Email already registered"
-        )
+        return JSONResponse(status_code=200, content={"message": "Check your email"})
+
     user = await create_user(db, user_in)
     return user

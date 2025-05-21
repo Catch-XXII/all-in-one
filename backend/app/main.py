@@ -25,7 +25,7 @@ app = FastAPI(
         "displayRequestDuration": True,
     },
     docs_url="/docs",  # Swagger UI
-    redoc_url="/redoc",  # ReDoc (optional)
+    redoc_url="/redoc",  # ReDoc
     debug=True,
 )
 
