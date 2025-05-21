@@ -10,7 +10,7 @@ from app.crud.user_crud import get_user_by_email
 from app.db.database import get_db
 from app.db.models.user import User
 
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/v1/login")
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/v1/login")
 
 
 async def get_current_user(
