@@ -1,4 +1,5 @@
 from pydantic import BaseModel, EmailStr
+from pydantic_settings import SettingsConfigDict
 
 
 class UserBase(BaseModel):
@@ -12,7 +13,5 @@ class UserCreate(UserBase):
 class UserOut(UserBase):
     id: int
     is_active: bool
-    is_active: bool
 
-    class Config:
-        from_attributes = True
+    model_config = SettingsConfigDict(from_attributes=True)

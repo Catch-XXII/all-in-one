@@ -10,4 +10,7 @@ router = APIRouter()
 
 @router.get("/admin-only", summary="Protected admin-only test endpoint")
 async def read_admin_data(admin: Annotated[User, Depends(require_admin)]):
-    return {"message": f"Hello Admin {admin.email}!"}
+    return {
+        "message": f"You are admin since {admin.created_at.strftime('%Y-%m-%d %H:%M')}",
+        "email": admin.email,
+    }
