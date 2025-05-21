@@ -6,22 +6,24 @@
           <div class="text-body-2 font-weight-light mb-n1">Welcome to</div>
           <h1 class="text-h2 font-weight-bold mb-8">QAsis</h1>
 
-          <v-form ref="formRef" @submit.prevent>
-            <v-text-field
-              ref="inputRef"
-              v-model="URL"
-              clearable
-              density="compact"
-              hide-details="true"
-              label="Search"
-              prepend-inner-icon="mdi-magnify"
-              rounded
-              :rules="rules"
-              variant="outlined"
-              @click:prepend-inner="search"
-              @keyup.enter="search"
-            />
-          </v-form>
+          <div id="search">
+            <v-form ref="formRef" @submit.prevent>
+              <v-text-field
+                ref="inputRef"
+                v-model="URL"
+                clearable
+                density="compact"
+                hide-details="true"
+                placeholder="Search"
+                prepend-inner-icon="mdi-magnify"
+                rounded
+                :rules="rules"
+                variant="outlined"
+                @click:prepend-inner="search"
+                @keyup.enter="search"
+              />
+            </v-form>
+          </div>
         </div>
       </v-col>
     </v-row>

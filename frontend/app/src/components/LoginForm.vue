@@ -10,6 +10,7 @@
         <div class="text-subtitle-1 text-medium-emphasis">Account</div>
 
         <v-text-field
+          id="email"
           v-model="email"
           density="compact"
           placeholder="Email address"
@@ -32,6 +33,7 @@
         </div>
 
         <v-text-field
+          id="password"
           v-model="password"
           :append-inner-icon="visible ? 'mdi-eye-off' : 'mdi-eye'"
           density="compact"
@@ -104,7 +106,7 @@
 <script setup>
   import { ref } from 'vue'
   import { useUIStore } from '@/stores/ui'
-  import { loginUser } from '@/api/userLogin'
+  import { login } from '@/api/userLogin'
   import { useRouter } from 'vue-router'
   const loading = ref(false)
   const router = useRouter()
@@ -133,7 +135,7 @@
 
     if (validationIs.valid) {
       loading.value = true
-      const { success, message } = await loginUser(email.value, password.value)
+      const { success, message } = await login(email.value, password.value)
 
       loading.value = false
 

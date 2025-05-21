@@ -1,7 +1,7 @@
 import axios from './axios'
 import { useAuthStore } from '@/stores/auth'
 
-export async function loginUser (email, password) {
+export async function login (email, password) {
   const authStore = useAuthStore()
 
   try {

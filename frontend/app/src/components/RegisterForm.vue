@@ -65,6 +65,8 @@
           block
           class="mb-8"
           color="blue"
+          :disabled="loading"
+          :loading="loading"
           size="large"
           type="submit"
           variant="tonal"
@@ -84,6 +86,23 @@
         </v-card-text>
 
       </v-card>
+      <v-snackbar
+        v-model="snackbarVisible"
+      >
+        {{ snackbarMessage }}
+
+        <template #actions>
+          <v-btn
+            color="pink"
+            :timeout="timeout"
+            variant="text"
+            @click="snackbarVisible = false"
+          >
+            Close
+          </v-btn>
+        </template>
+      </v-snackbar>
+
     </div>
   </v-form>
 </template>
@@ -94,14 +113,52 @@
   const password = ref('')
   const confirmPassword = ref('')
   const showPassword = ref(false)
+  const loading = ref(false)
   const showConfirmPassword = ref(false)
   const formRef = ref(null)
   const email = ref('')
+  const snackbarVisible = ref(false)
+  const snackbarMessage = ref('')
+  const timeout = ref(2000)
+  import { useRouter } from 'vue-router'
+  import { register } from '@/api/userRegister'
+
+  const router = useRouter()
+
 
   const submit = async () => {
-    const isValid = await formRef.value?.validate()
-    if (isValid) {
-    // Continue
+    const validationIs = await formRef.value?.validate()
+    if (!validationIs?.valid) return
+
+    if (password.value !== confirmPassword.value) {
+      snackbarMessage.value = 'Passwords do not match'
+      snackbarVisible.value = true
+      return
+    }
+
+    loading.value = true
+
+    try {
+      const { success, message } = await register(email.value, password.value)
+
+      loading.value = false
+
+      if (success) {
+        snackbarMessage.value = message || 'Registration successful!'
+        snackbarVisible.value = true
+
+        await router.push('/')
+      } else if (message) {
+        snackbarMessage.value = message
+        snackbarVisible.value = true
+      }
+    } catch (error) {
+      loading.value = false
+
+      snackbarMessage.value =
+        error?.response?.data?.message || error.message || 'Unexpected error occurred'
+
+      snackbarVisible.value = true
     }
   }
   const passwordRules = [
