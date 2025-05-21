@@ -25,7 +25,8 @@
       <LoginButton v-if="!auth.isLoggedIn" />
       <RegisterButton v-if="!auth.isLoggedIn" />
 
-      <v-btn icon="mdi-heart" />
+      <v-btn icon="mdi-heart" rounded="xl" />
+
       <v-dialog v-model="ui.loginDialog" max-width="500">
         <LoginForm />
       </v-dialog>
