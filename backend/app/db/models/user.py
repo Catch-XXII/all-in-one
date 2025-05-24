@@ -17,3 +17,9 @@ class User(Base):
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), server_default=func.now()
     )
+    last_login_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), nullable=True
+    )
+    total_requests: Mapped[int] = mapped_column(default=0)
+    last_ip: Mapped[str] = mapped_column(nullable=True)
+    last_user_agent: Mapped[str] = mapped_column(nullable=True)

@@ -1,7 +1,8 @@
 from typing import Annotated
 
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, Request
 from fastapi.responses import JSONResponse
+from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.crud.user_crud import create_user, get_user_by_email
@@ -12,10 +13,21 @@ router = APIRouter()
 
 
 @router.post("/register", response_model=UserOut, summary="Register new user")
-async def register(user_in: UserCreate, db: Annotated[AsyncSession, Depends(get_db)]):
+async def register(
+    request: Request, user_in: UserCreate, db: Annotated[AsyncSession, Depends(get_db)]
+):
     existing = await get_user_by_email(db, user_in.email)
     if existing:
         return JSONResponse(status_code=200, content={"message": "Check your email"})
 
-    user = await create_user(db, user_in)
-    return user
+    try:
+        user = await create_user(
+            db,
+            user_in,
+            ip=request.client.host,
+            user_agent=request.headers.get("user-agent"),
+        )
+        return user
+    except IntegrityError:
+        await db.rollback()
+        return JSONResponse(status_code=200, content={"message": "Check your email"})
