@@ -5,7 +5,8 @@ from fastapi.responses import JSONResponse
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.crud.user_crud import create_user, get_user_by_email
+from app.crud.create_user import create_user
+from app.crud.get_user_by_email import get_user_by_email
 from app.db.database import get_db
 from app.db.schemas.user_schema import UserCreate, UserOut
 

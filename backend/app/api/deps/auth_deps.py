@@ -6,7 +6,7 @@ from jose import JWTError, jwt
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.config import settings
-from app.crud.user_crud import get_user_by_email
+from app.crud.get_user_by_email import get_user_by_email
 from app.db.database import get_db
 from app.db.models.user import User
 

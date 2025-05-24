@@ -7,7 +7,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.jwt import create_access_token
 from app.core.security import verify_password
-from app.crud.user_crud import get_user_by_email
+from app.crud.get_user_by_email import get_user_by_email
 from app.db.database import get_db
 from app.db.models.user import User
 from app.db.schemas.token_schema import Token

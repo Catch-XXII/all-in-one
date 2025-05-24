@@ -1,8 +1,6 @@
 from datetime import UTC, datetime
 
-from sqlalchemy import select
 from sqlalchemy.exc import IntegrityError
-from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.security import hash_password
 from app.db.models.user import User
@@ -28,8 +26,3 @@ async def create_user(db, user_in, ip=None, user_agent=None):
     except IntegrityError:
         await db.rollback()
         return None
-
-
-async def get_user_by_email(db: AsyncSession, email: str) -> User | None:
-    result = await db.execute(select(User).where(User.email == email))
-    return result.scalar_one_or_none()
