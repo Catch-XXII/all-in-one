@@ -3,7 +3,7 @@ from pydantic import BaseModel, EmailStr
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.api.deps.auth_deps import get_current_user
+from app.api.deps.get_current_user import get_current_user
 from app.db.database import get_db
 from app.db.models import User
 

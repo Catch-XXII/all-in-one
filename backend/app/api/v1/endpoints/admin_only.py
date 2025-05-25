@@ -2,7 +2,7 @@ from typing import Annotated
 
 from fastapi import APIRouter, Depends
 
-from app.api.deps.auth_deps import require_admin
+from app.api.deps.require_admin import require_admin
 from app.db.models.user import User
 
 router = APIRouter()

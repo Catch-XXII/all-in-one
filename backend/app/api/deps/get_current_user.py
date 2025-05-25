@@ -38,13 +38,3 @@ async def get_current_user(
         raise credentials_exception
 
     return user
-
-
-async def require_admin(
-    current_user: Annotated[User, Depends(get_current_user)],
-) -> User:
-    if not current_user.is_superuser:
-        raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN, detail="Admin access only"
-        )
-    return current_user
