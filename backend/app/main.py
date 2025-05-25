@@ -3,6 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from app.api.v1.endpoints import (
     admin_only_router,
+    analyze_router,
     deactivate_user_router,
     get_me_router,
     login_router,
@@ -52,3 +53,4 @@ app.include_router(register_router, prefix="/api/v1", tags=["Register"])
 app.include_router(get_me_router, prefix="/api/v1", tags=["Who Am I"])
 app.include_router(admin_only_router, prefix="/api/v1", tags=["Admin Only"])
 app.include_router(deactivate_user_router, prefix="/api/v1", tags=["Admin Only"])
+app.include_router(analyze_router, prefix="/api/v1", tags=["Analyze"])

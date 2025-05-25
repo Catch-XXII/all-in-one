@@ -32,39 +32,44 @@
 
 <script setup>
   import { ref } from 'vue'
+  import { analyzePage } from '@/api/services/analyze'
 
   const URL = ref('')
   const formRef = ref(null)
   const loading = ref(false)
 
   const rules = [
-    value => (value ? value.length <= 100 : true) || 'Max 100 characters.',
+    value => (value ? value.length <= 200 : true) || 'Max 200 characters.',
     value => {
-      if (!value) return true // boşsa geç, validasyon uygulama
-      const pattern = /^(?:https?:\/\/)?(?:[\w-]+\.)+[a-z]{2,6}$/i
-      return pattern.test(value.trim()) || 'Invalid domain or URL.'
+      if (!value) return true
+      const pattern = /^(https?:\/\/)?([\w\-]+\.)+[\w\-]+(\/[\w\-./?%&=]*)?$/i
+      return pattern.test(value.trim()) || 'Invalid URL.'
     },
   ]
-
-  async function search () {
-    const { valid } = await formRef.value.validate()
-    if (!valid) return
-
-    loading.value = true
-    console.log('Searching for:', URL.value.trim())
-
-    setTimeout(() => {
-      loading.value = false
-      console.log('Simulated search complete.')
-    }, 5000)
-  }
 
   function handleKeyDown (event) {
     if (event.key === 'Escape') {
       URL.value = ''
     }
   }
+  async function search () {
+    const { valid } = await formRef.value.validate()
+    if (!valid) return
 
+    loading.value = true
+    const trimmedUrl = URL.value.trim()
+
+    try {
+      const results = await analyzePage(trimmedUrl)
+      console.log(trimmedUrl)
+      console.log('Analyze results:', results)
+
+    } catch (e) {
+      console.error('Error during analysis:', e)
+    } finally {
+      loading.value = false
+    }
+  }
   onMounted(() => {
     window.addEventListener('keydown', handleKeyDown)
   })

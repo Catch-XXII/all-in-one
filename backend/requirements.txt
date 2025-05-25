@@ -4,6 +4,7 @@ python-multipart
 passlib[bcrypt]
 pydantic[email]
 python-jose
+selectolax
 pre-commit
 hypercorn
 pydantic
@@ -11,4 +12,5 @@ alembic
 fastapi
 asyncpg
 black
+httpx
 ruff
