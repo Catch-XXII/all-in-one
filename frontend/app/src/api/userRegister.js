@@ -1,11 +1,14 @@
 import axios from './axios'
 
+import { getClientIp } from '@/api/services/ipService.js';
+
 export async function register (email, password) {
   try {
-
+    const ip = await getClientIp();
     await axios.post('/register', {
       email,
       password,
+      ip,
     })
 
     return { success: true }

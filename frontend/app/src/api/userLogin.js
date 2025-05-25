@@ -1,14 +1,17 @@
 import axios from './axios'
 import { useAuthStore } from '@/stores/auth'
+import { getClientIp } from '@/api/services/ipService.js';
 
 export async function login (email, password) {
   const authStore = useAuthStore()
 
   try {
+    const ip = await getClientIp()
+
     const params = new URLSearchParams()
     params.append('username', email)
     params.append('password', password)
-
+    if (ip) params.append('ip', ip)
     const response = await axios.post('/login', params, {
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',

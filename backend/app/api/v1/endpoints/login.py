@@ -23,6 +23,14 @@ async def login(
     form_data: Annotated[OAuth2PasswordRequestForm, Depends()],
     db: Annotated[AsyncSession, Depends(get_db)],
 ):
+    form = await request.form()
+    ip = (
+        form.get("ip")
+        or request.headers.get("x-forwarded-for", request.client.host)
+        .split(",")[0]
+        .strip()
+    )
+
     user: User | None = await get_user_by_email(db, form_data.username)
     if not user or not verify_password(form_data.password, user.hashed_password):
         raise HTTPException(
@@ -30,7 +38,7 @@ async def login(
         )
 
     user.last_login_at = datetime.now(UTC)
-    user.last_ip = request.client.host
+    user.last_ip = ip
     user.last_user_agent = request.headers.get("user-agent")
 
     await db.commit()

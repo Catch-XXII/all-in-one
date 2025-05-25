@@ -22,10 +22,18 @@ async def register(
         return JSONResponse(status_code=200, content={"message": "Check your email"})
 
     try:
+        body = await request.json()
+        ip = (
+            body.get("ip")
+            or request.headers.get("x-forwarded-for", request.client.host)
+            .split(",")[0]
+            .strip()
+        )
+
         user = await create_user(
             db,
             user_in,
-            ip=request.client.host,
+            ip=ip,
             user_agent=request.headers.get("user-agent"),
         )
         return user
