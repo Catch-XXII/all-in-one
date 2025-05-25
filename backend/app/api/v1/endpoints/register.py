@@ -2,7 +2,7 @@ from typing import Annotated
 
 from fastapi import APIRouter, Depends, Request
 from fastapi.responses import JSONResponse
-from sqlalchemy.exc import IntegrityError
+from sqlalchemy.exc import IntegrityError, SQLAlchemyError
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.crud.create_user import create_user
@@ -30,13 +30,26 @@ async def register(
             .strip()
         )
 
+        location = {
+            "country": body.get("country"),
+            "city": body.get("city"),
+            "latitude": body.get("latitude"),
+            "longitude": body.get("longitude"),
+        }
+
         user = await create_user(
             db,
             user_in,
             ip=ip,
             user_agent=request.headers.get("user-agent"),
+            location=location,
         )
-        return user
-    except IntegrityError:
+        return (
+            user
+            if user
+            else JSONResponse(status_code=200, content={"message": "Check your email"})
+        )
+
+    except (IntegrityError, SQLAlchemyError):
         await db.rollback()
         return JSONResponse(status_code=200, content={"message": "Check your email"})

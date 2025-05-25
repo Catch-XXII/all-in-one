@@ -1,17 +1,23 @@
 import axios from './axios'
 import { useAuthStore } from '@/stores/auth'
-import { getClientIp } from '@/api/services/ipService.js';
+import { getClientLocation } from '@/api/services/ipService'
 
 export async function login (email, password) {
   const authStore = useAuthStore()
 
   try {
-    const ip = await getClientIp()
+    const location = await getClientLocation()
 
     const params = new URLSearchParams()
     params.append('username', email)
     params.append('password', password)
-    if (ip) params.append('ip', ip)
+
+    if (location.ip) params.append('ip', location.ip)
+    if (location.country) params.append('country', location.country)
+    if (location.city) params.append('city', location.city)
+    if (location.latitude) params.append('latitude', location.latitude)
+    if (location.longitude) params.append('longitude', location.longitude)
+
     const response = await axios.post('/login', params, {
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
@@ -27,12 +33,10 @@ export async function login (email, password) {
       }
     }
 
-
     authStore.login({
       user: { email },
       token: access_token,
     })
-
 
     return {
       success: true,

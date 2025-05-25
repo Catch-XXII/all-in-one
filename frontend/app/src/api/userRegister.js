@@ -1,14 +1,18 @@
 import axios from './axios'
-
-import { getClientIp } from '@/api/services/ipService.js';
+import { getClientLocation } from '@/api/services/ipService'
 
 export async function register (email, password) {
   try {
-    const ip = await getClientIp();
+    const location = await getClientLocation()
+
     await axios.post('/register', {
       email,
       password,
-      ip,
+      ip: location.ip,
+      country: location.country,
+      city: location.city,
+      latitude: location.latitude,
+      longitude: location.longitude,
     })
 
     return { success: true }
