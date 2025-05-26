@@ -1,17 +1,14 @@
 export async function getClientLocation () {
   try {
-    const ipRes = await fetch('https://api.ipify.org?format=json');
-    const { ip } = await ipRes.json();
-
-    const geoRes = await fetch(`https://ipapi.co/${ip}/json`);
-    const geoData = await geoRes.json();
+    const res = await fetch('https://ipwho.is/');
+    const data = await res.json();
 
     return {
-      ip,
-      country: geoData.country_name,
-      city: geoData.city,
-      latitude: geoData.latitude,
-      longitude: geoData.longitude,
+      ip: data.ip,
+      country: data.country,
+      city: data.city,
+      latitude: data.latitude,
+      longitude: data.longitude,
     };
   } catch (error) {
     console.error('Failed to fetch client location', error);

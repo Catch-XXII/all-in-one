@@ -15,9 +15,15 @@ export const useUIStore = defineStore('ui', () => {
   const toggleLoginDialog = () => {
     loginDialog.value = !loginDialog.value
   }
+  const openLoginDialog = () => {
+    loginDialog.value = true
+  }
   const closeLoginDialog = () => {
-
     loginDialog.value = false
+  }
+
+  const closeRegisterDialog = () => {
+    registerDialog.value = false
   }
   const switchToRegister = () => {
     loginDialog.value = false
@@ -39,5 +45,7 @@ export const useUIStore = defineStore('ui', () => {
     switchToRegister,
     switchToLogin,
     closeLoginDialog,
+    openLoginDialog,
+    closeRegisterDialog,
   }
 })

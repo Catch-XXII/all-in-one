@@ -119,14 +119,19 @@
   const password = ref('')
   const visible = ref(false)
 
+
   const emailRules = [
     v => !!v || 'Email is required',
-    v => /.+@.+\..+/.test(v) || 'Email must be valid',
+    v => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v) || 'Email must be valid',
+    v => v.length <= 255 || 'Email too long',
   ]
 
   const passwordRules = [
     v => !!v || 'Password is required',
-    v => v.length >= 6 || 'Password must be at least 6 characters',
+    v => v.length >= 8 || 'Password must be at least 8 characters',
+    v => /[0-9]/.test(v) || 'Must contain at least one number',
+    v => /[A-Z]/.test(v) || 'Must contain at least one uppercase letter',
+    v => /[!@#$%^&*]/.test(v) || 'Must contain at least one special character',
   ]
 
   const submit = async () => {

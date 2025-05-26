@@ -5,6 +5,7 @@ from fastapi.responses import JSONResponse
 from sqlalchemy.exc import IntegrityError, SQLAlchemyError
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from app.core import register_rate_limit
 from app.crud.create_user import create_user
 from app.crud.get_user_by_email import get_user_by_email
 from app.db.database import get_db
@@ -13,7 +14,12 @@ from app.db.schemas.user_schema import UserCreate, UserOut
 router = APIRouter()
 
 
-@router.post("/register", response_model=UserOut, summary="Register new user")
+@router.post(
+    "/register",
+    response_model=UserOut,
+    summary="Register new user",
+    dependencies=[Depends(register_rate_limit())],
+)
 async def register(
     request: Request, user_in: UserCreate, db: Annotated[AsyncSession, Depends(get_db)]
 ):

@@ -7,6 +7,7 @@ from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.jwt import create_access_token
+from app.core.rate_limiter import login_rate_limit
 from app.core.security import verify_password
 from app.crud.get_user_by_email import get_user_by_email
 from app.crud.user_location import insert_user_location
@@ -18,7 +19,10 @@ router = APIRouter()
 
 
 @router.post(
-    "/login", response_model=Token, summary="Authenticate user and return JWT token"
+    "/login",
+    response_model=Token,
+    summary="Authenticate user and return JWT token",
+    dependencies=[Depends(login_rate_limit())],
 )
 async def login(
     request: Request,

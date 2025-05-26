@@ -18,6 +18,10 @@ class Settings(BaseSettings):
     DESCRIPTION: str
     VERSION: str
 
+    REDIS_HOST: str
+    REDIS_PORT: int
+    REDIS_DB: int
+
     @computed_field
     @property
     def database_url(self) -> str:
@@ -25,6 +29,10 @@ class Settings(BaseSettings):
             f"postgresql+asyncpg://{self.POSTGRES_USER}:{self.POSTGRES_PASSWORD}"
             f"@{self.POSTGRES_HOST}:{self.POSTGRES_PORT}/{self.POSTGRES_DB}"
         )
+
+    @property
+    def redis_url(self) -> str:
+        return f"redis://{self.REDIS_HOST}:{self.REDIS_PORT}/{self.REDIS_DB}"
 
     # New structure for getting settings v2.x
     model_config = SettingsConfigDict(env_file=".env")

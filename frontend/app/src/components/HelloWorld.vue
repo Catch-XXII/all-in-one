@@ -7,6 +7,9 @@
           <h1 class="text-h2 font-weight-bold mb-8">QAsis</h1>
 
           <div id="search">
+            <v-overlay class="align-center justify-center" :model-value="loading" persistent>
+              <v-progress-circular color="primary" indeterminate size="64" width="6" />
+            </v-overlay>
             <v-form ref="formRef" @submit.prevent>
               <v-text-field
                 ref="inputRef"

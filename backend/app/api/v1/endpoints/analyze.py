@@ -1,31 +1,10 @@
 from fastapi import APIRouter
-from httpx import AsyncClient, RequestError
-from selectolax.parser import HTMLParser
+from playwright.async_api import async_playwright
 
 from app.db.schemas.analyze_schema import AnalyzeRequestSchema
+from app.utils.parser_utils import HTMLStructureAnalyzer
 
 router = APIRouter()
-
-
-def guess_element_type(node):
-    tag = node.tag or ""
-    class_attr = node.attributes.get("class")
-    class_attr = class_attr.lower() if class_attr else ""
-
-    if tag == "h1" or "title" in class_attr or "headline" in class_attr:
-        return "headline"
-    if tag == "button" or "btn" in class_attr:
-        return "button"
-    if tag == "a" and "href" in node.attributes:
-        return "link"
-    if tag == "img":
-        return "image"
-    if tag == "form":
-        return "form"
-    if tag == "p" and len(node.text(strip=True)) > 40:
-        return "paragraph"
-
-    return "other"
 
 
 @router.post("/analyze")
@@ -35,39 +14,93 @@ async def analyze(body: AnalyzeRequestSchema):
     if not url.startswith("http://") and not url.startswith("https://"):
         url = "https://" + url
 
-    headers = {
-        "User-Agent": (
-            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
-            "(KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36"
-        ),
-        "Accept-Language": "en-US,en;q=0.9",
-        "Accept": (
-            "text/html,application/xhtml+xml,"
-            "application/xml;q=0.9,image/webp,*/*;q=0.8"
-        ),
-    }
+    async with async_playwright() as p:
+        browser = await p.chromium.launch(headless=True)
+        context = await browser.new_context()
+        page = await context.new_page()
 
-    try:
-        async with AsyncClient(timeout=10, follow_redirects=True) as client:
-            response = await client.get(url, headers=headers)
-    except RequestError as e:
-        return {"detail": f"Failed to fetch URL: {str(e)}"}
+        try:
+            await page.goto(url, timeout=15000)
+            await page.wait_for_load_state("domcontentloaded")
+        except Exception as e:
+            await browser.close()
+            return {"detail": f"Failed to load page: {str(e)}"}
 
-    tree = HTMLParser(response.text)
-    elements = []
+        html_content = await page.content()
+        structure_parser = HTMLStructureAnalyzer(html_content)
+        structure_info = structure_parser.get_document_structure()
+        tag_counts = structure_parser.get_tag_counts()
 
-    for node in tree.css("*"):
-        if not node.tag:
-            continue
-
-        elements.append(
-            {
-                "type": guess_element_type(node),
-                "tag": node.tag,
-                "text": node.text(strip=True),
-                "id": node.attributes.get("id"),
-                "class": node.attributes.get("class"),
-            }
+        elements = await page.query_selector_all(
+            "body input, body button, body textarea, body select, "
+            "body a, body form, body img, body h1, body p"
         )
+        result = []
 
-    return elements
+        for el in elements:
+            tag = await el.evaluate("e => e.tagName.toLowerCase()")
+            class_attr = await el.get_attribute("class") or ""
+            id_attr = await el.get_attribute("id")
+            name_attr = await el.get_attribute("name")
+            placeholder_attr = await el.get_attribute("placeholder")
+            type_attr = await el.get_attribute("type")
+            text_content = (await el.inner_text()) or ""
+
+            if "footer" in class_attr.lower():
+                continue
+
+            if tag == "a" and not text_content.strip():
+                continue
+
+            if tag not in {
+                "input",
+                "button",
+                "textarea",
+                "select",
+                "a",
+                "form",
+                "img",
+                "h1",
+                "p",
+            }:
+                continue
+
+            if not (id_attr or name_attr or placeholder_attr or text_content.strip()):
+                continue
+
+            # Try to find label by matching 'for' attribute
+            label_text = None
+            element_id_or_name = id_attr or name_attr
+            if element_id_or_name:
+                label_el = await page.query_selector(
+                    f'label[for="{element_id_or_name}"]'
+                )
+                if label_el:
+                    label_text = (await label_el.inner_text()) or None
+
+            if not label_text:
+                parent = await el.evaluate_handle("e => e.parentElement")
+                if parent:
+                    label_el = await parent.query_selector("label")
+                    if label_el:
+                        label_text = (await label_el.inner_text()) or None
+
+            result.append(
+                {
+                    "tag": tag,
+                    "type": type_attr,
+                    "id": id_attr,
+                    "name": name_attr,
+                    "placeholder": placeholder_attr,
+                    "class": class_attr,
+                    "text": text_content.strip(),
+                    "label": label_text.strip() if label_text else None,
+                }
+            )
+
+        await browser.close()
+        return {
+            "structure": structure_info,
+            "tag_counts": tag_counts,
+            "elements": result,
+        }
