@@ -11,19 +11,31 @@ export const useAuthStore = defineStore('auth', {
       this.isLoggedIn = true
       this.user = user
       this.token = token
-      localStorage.setItem('auth_token', token)
-      localStorage.setItem('auth_user', JSON.stringify(user))
+      // localStorage.setItem('auth_token', token)
+      // localStorage.setItem('auth_user', JSON.stringify(user))
+
+      sessionStorage.setItem('auth_token', token)
+      sessionStorage.setItem('auth_user', JSON.stringify(user))
+
     },
     logout () {
       this.isLoggedIn = false
       this.user = null
       this.token = null
-      localStorage.removeItem('auth_token')
-      localStorage.removeItem('auth_user')
+      // localStorage.removeItem('auth_token')
+      // localStorage.removeItem('auth_user')
+
+      sessionStorage.removeItem('auth_token')
+      sessionStorage.removeItem('auth_user')
+
     },
     init () {
-      const token = localStorage.getItem('auth_token')
-      const user = localStorage.getItem('auth_user')
+      // const token = localStorage.getItem('auth_token')
+      // const user = localStorage.getItem('auth_user')
+
+      const token = sessionStorage.getItem('auth_token')
+      const user = sessionStorage.getItem('auth_user')
+
 
       if (token && user) {
         this.token = token
