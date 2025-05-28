@@ -35,7 +35,10 @@ class Settings(BaseSettings):
         return f"redis://{self.REDIS_HOST}:{self.REDIS_PORT}/{self.REDIS_DB}"
 
     # New structure for getting settings v2.x
-    model_config = SettingsConfigDict(env_file=".env")
+    model_config = SettingsConfigDict(
+        env_file=".env",
+        env_file_encoding="utf-8",
+    )
 
 
 settings = Settings()

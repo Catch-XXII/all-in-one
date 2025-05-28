@@ -49,24 +49,25 @@ app = FastAPI(
     debug=True,
 )
 
-allow_origin_regex = (
-    r"http://192\.168\.1\.\d+:5173"  # covers all 192.168.1.X:5173 origins
-    if settings.ENVIRONMENT == "development"
-    else None
-)
-
-allow_origins = (
-    [settings.FRONTEND_ORIGIN] if settings.ENVIRONMENT != "development" else []
-)
-
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=allow_origins,
-    allow_origin_regex=allow_origin_regex,
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
+if settings.ENVIRONMENT == "production":
+    app.add_middleware(
+        CORSMiddleware,
+        allow_origins=[settings.FRONTEND_ORIGIN],
+        allow_origin_regex=None,
+        allow_credentials=True,
+        allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],  # Only what you need
+        allow_headers=["Authorization", "Content-Type"],  # Only what you need
+    )
+else:
+    # Development configuration
+    app.add_middleware(
+        CORSMiddleware,
+        allow_origins=[],
+        allow_origin_regex=r"http://192\.168\.1\.\d+:5173",
+        allow_credentials=True,
+        allow_methods=["*"],
+        allow_headers=["*"],
+    )
 
 app.include_router(
     login_router,

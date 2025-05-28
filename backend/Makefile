@@ -14,3 +14,21 @@ lint:
 
 test:
 	pytest tests/
+
+setup:
+	./setup.py setup
+
+dev:
+	./setup.py dev
+
+prod:
+	./setup.py prod
+
+start:
+	./setup.py start
+
+start-dev:
+	./setup.py start:dev
+
+start-prod:
+	./setup.py start:prod
