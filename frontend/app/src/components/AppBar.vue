@@ -1,18 +1,3 @@
-<script setup lang="ts">
-  import { ref } from 'vue';
-  const rail = ref(true)
-
-  import LoginButton from '@/components/LoginButton.vue';
-  import RegisterButton from '@/components/RegisterButton.vue';
-  import LoginForm from '@/components/LoginForm.vue';
-  import RegisterForm from '@/components/RegisterForm.vue';
-  import { useUIStore } from '@/stores/ui'
-  const ui = useUIStore()
-
-  import { useAuthStore } from '@/stores/auth'
-  const auth = useAuthStore()
-</script>
-
 <template>
   <v-app-bar class="" :elevation="1" :rail="rail" rounded>
     <template #prepend>
@@ -38,6 +23,22 @@
     </template>
   </v-app-bar>
 </template>
+
+<script setup lang="ts">
+  import { ref } from 'vue';
+  const rail = ref(true)
+
+  import LoginButton from '@/components/LoginButton.vue';
+  import RegisterButton from '@/components/RegisterButton.vue';
+  import LoginForm from '@/components/LoginForm.vue';
+  import RegisterForm from '@/components/RegisterForm.vue';
+  import { useUIStore } from '@/stores/ui'
+  const ui = useUIStore()
+
+  import { useAuthStore } from '@/stores/auth'
+  const auth = useAuthStore()
+</script>
+
 
 <style scoped lang="sass">
 
