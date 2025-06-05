@@ -15,22 +15,24 @@ router = APIRouter()
 
 @router.get("/whoami", response_model=UserOut)
 async def who_am_i(
-    current_user: Annotated[User, Depends(get_current_user)],
-    db: Annotated[AsyncSession, Depends(get_db)]
+        current_user: Annotated[User, Depends(get_current_user)],
+        db: Annotated[AsyncSession, Depends(get_db)],
 ):
     """
     Get current user information.
     Returns basic user information for the authenticated user.
     """
+    recent_location_limit = 3
+
     # Get user's recent locations
     result = await db.execute(
         select(UserLocation)
         .where(UserLocation.user_id == current_user.id)
         .order_by(UserLocation.created_at.desc())
-        .limit(5)
+        .limit(recent_location_limit)
     )
     locations = result.scalars().all()
-    
-    # Add locations to user object
+
+    # Add locations to a user object
     current_user.locations = locations
     return current_user
