@@ -15,8 +15,8 @@ router = APIRouter()
 
 @router.get("/whoami", response_model=UserOut)
 async def who_am_i(
-        current_user: Annotated[User, Depends(get_current_user)],
-        db: Annotated[AsyncSession, Depends(get_db)],
+    current_user: Annotated[User, Depends(get_current_user)],
+    db: Annotated[AsyncSession, Depends(get_db)],
 ):
     """
     Get current user information.

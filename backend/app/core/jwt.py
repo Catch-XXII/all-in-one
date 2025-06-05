@@ -37,12 +37,12 @@ def create_access_token(data: dict, expires_delta: timedelta | None = None) -> s
     # Fallback expiration if isn't provided
     default_expire_minutes = 15
     expire = datetime.now(UTC) + (
-            expires_delta
-            or timedelta(
-        minutes=getattr(
-            settings, "ACCESS_TOKEN_EXPIRE_MINUTES", default_expire_minutes
+        expires_delta
+        or timedelta(
+            minutes=getattr(
+                settings, "ACCESS_TOKEN_EXPIRE_MINUTES", default_expire_minutes
+            )
         )
-    )
     )
 
     # Add standard claims to the payload
